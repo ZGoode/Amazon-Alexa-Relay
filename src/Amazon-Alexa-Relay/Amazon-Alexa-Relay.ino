@@ -1,27 +1,17 @@
-#include <Arduino.h>
+#include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
 #include <WiFiManager.h>
 #include "fauxmoESP.h"
 #include "html.h"
 
 fauxmoESP fauxmo;
-
-// -----------------------------------------------------------------------------
-
-#define SERIAL_BAUDRATE     115200
-
-#define PIN_RELAY          D1
-
-#define ID_RELAY           "Socket"
-
+#define PIN_RELAY D1
+#define ID_RELAY "Socket"
 boolean relayOn = false;
 
 void setup() {
 
-  // Init serial port and clean garbage
-  Serial.begin(SERIAL_BAUDRATE);
-  Serial.println();
-  Serial.println();
+  Serial.begin(115200);
 
   pinMode(PIN_RELAY, OUTPUT);
   digitalWrite(PIN_RELAY, LOW);
@@ -52,12 +42,6 @@ void loop() {
   if (millis() - last > 5000) {
     last = millis();
     Serial.printf("[MAIN] Free heap: %d bytes\n", ESP.getFreeHeap());
-  }
-
-  if (digitalRead(PIN_RELAY) == HIGH) {
-    relayOn = true;
-  } else {
-    relayOn = false;
   }
 
   fauxmo.setState(ID_RELAY, relayOn, 255);
